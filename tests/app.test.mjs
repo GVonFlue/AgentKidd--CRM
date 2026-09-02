@@ -83,8 +83,8 @@ export default async function run(t, { mount, tick, dom }) {
 
   const sbLogo = document.querySelector('.sb-brand .sb-logo');
   t.ok(sbLogo, "the client's mark is in the sidebar");
-  t.ok(sbLogo && /\/brand\/dwell-logo\.png$/.test(sbLogo.getAttribute('src') || ''),
-    'and it points at the hard-coded asset, not an env var');
+  t.ok(sbLogo && /^\/brand\/.+\.(png|jpg|svg)$/.test(sbLogo.getAttribute('src') || ''),
+    'and it points at a per-install asset in /brand, not an env var');
   t.ok(/business suite/i.test((document.querySelector('.sb-suite') || {}).textContent || ''),
     'with the product line stacked underneath it');
 
@@ -95,11 +95,19 @@ export default async function run(t, { mount, tick, dom }) {
   t.ok(/business suite/i.test((document.querySelector('.suite-name') || {}).textContent || ''),
     'with "Business Suite" beside it');
 
-  /* the leader seat carries a real headshot; see src/lib/people.js */
+  /* The leader seat carries a headshot only when this install configured one
+     (OWNER_PHOTO in src/lib/people.js). What must hold for EVERY install is
+     that the two halves agree: has-photo iff there is an <img>. A half state —
+     the class without the image, or the image without the class — is the bug
+     that would actually show, and it is invisible to an assertion that simply
+     demands a photo. */
   const leaderAv = document.querySelector('.sb-av');
-  t.ok(leaderAv && leaderAv.classList.contains('has-photo'),
-    'the leader seat renders a headshot rather than initials');
-  t.ok(leaderAv && leaderAv.querySelector('img'), 'as an <img> inside the circle');
+  t.ok(leaderAv, 'the leader seat renders an avatar');
+  const hasCls = !!(leaderAv && leaderAv.classList.contains('has-photo'));
+  const hasImg = !!(leaderAv && leaderAv.querySelector('img'));
+  t.ok(hasCls === hasImg, 'and its photo class agrees with whether an image is there');
+  t.ok(hasImg || ((leaderAv.textContent || '').trim().length > 0),
+    'falling back to initials when no headshot is configured');
 
   /* ------------------------------------------------- every tab, as the leader */
   const navLabels = q('.sb .nav-i').map(b => (b.textContent || '').trim()).filter(Boolean);

@@ -1,6 +1,5 @@
 /* ============================================================================
-   assets.js — hard-coded brand artwork for THIS install (Dwell Real Estate
-   Group).
+   assets.js — hard-coded brand artwork for THIS install (Justus Kidd).
 
    Everything here lives in /public/brand and is served from the site root, so
    these are plain URLs, not imports. That keeps them out of the JS bundle and
@@ -14,8 +13,8 @@
 
 export const ASSETS = {
   /* the client's own mark. White artwork — it must sit on a dark band. */
-  clientLogo:     '/brand/dwell-logo.png',
-  clientLogoAlt:  'dwellWICHITA',
+  clientLogo:     '/brand/agentkidd-logo.png',
+  clientLogoAlt:  'Agent Kidd',
 
   /* NOTE: there is no sidebar image. The circuit backdrop is an inline SVG in
      src/components/SidebarArt.jsx, ported from the ProyTech CRM so both

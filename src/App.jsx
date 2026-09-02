@@ -540,7 +540,7 @@ function NoSeat({ session, onDone }) {
             </p>
             <div className="fgrid">
               <Field label="Your name" full>
-                <Inp value={name} onChange={e => setName(e.target.value)} placeholder="Jeff Schnell" />
+                <Inp value={name} onChange={e => setName(e.target.value)} placeholder="Full name" />
               </Field>
             </div>
             <div style={{ marginTop: 12, display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>

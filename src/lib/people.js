@@ -3,7 +3,7 @@
 
    Why a lookup instead of hard-coding one <img> into the sidebar: the sidebar
    footer renders whoever is SIGNED IN, not the owner of the install. Painting
-   one face there unconditionally would put Jeff's headshot on every agent's
+   one face there unconditionally would put the owner's headshot on every agent's
    screen, and on the demo's "View as" switcher. So: an explicit map, an
    initials fallback, and one deliberate escape hatch for the owner seat.
 
@@ -18,33 +18,27 @@
    240x240; they are rendered as a circle with object-fit:cover.
    ========================================================================== */
 
-const JEFF = '/brand/jeff-schnell.jpg';
+const OWNER = null;   /* drop a square JPG in /public/brand and point this at it */
 
 /* Preferred: keyed on the Supabase Auth email, which cannot be typo'd into a
-   different person the way a display name can. Add Jeff's real login here as
+   different person the way a display name can. Add the owner's real login here as
    soon as his seat exists and the name matches below become belt-and-braces. */
 export const BY_EMAIL = {
-  'jeff@dwellwichita.com': JEFF,
-  'jeff@dwellwichita.test': JEFF,
 };
 
 /* Fallback: display name. Spelling variants are listed on purpose — the seat
    record is typed by a human and "Schell" is the common miss. */
 export const BY_NAME = {
-  'jeff schnell': JEFF,
-  'jeff schell': JEFF,
-  'jeffrey schnell': JEFF,
-  'jeff schnell jr': JEFF,
 };
 
-/* This is a single-brokerage install and the leader seat is Jeff's. Rather than
+/* This is a single-brokerage install and the leader seat is the owner's. Rather than
    depend on his display name being spelled the way we guessed, whoever holds
    the leader seat gets the owner headshot.
 
    Set this to false the day Dwell has a second leader, or the day you would
    rather the photo appear ONLY for an exact email match above. */
 export const OWNER_PHOTO_ON_LEADER = true;
-export const OWNER_PHOTO = JEFF;
+export const OWNER_PHOTO = OWNER;
 
 const norm = s => String(s || '')
   .toLowerCase()
