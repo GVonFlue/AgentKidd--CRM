@@ -85,4 +85,19 @@ export default async function run(t) {
   }
   t.ok(fromView.length === 0,
     fromView.length ? `no screen imports a fact from another screen — found ${fromView.join('; ')}` : 'no screen imports a fact from another screen');
+
+  /* A brand colour written as a JSX attribute STRING ("${BRAND.colors.red}")
+     is not a colour: JSX does not interpolate inside quotes, so the pill got
+     the literal text and rendered with no colour at all. This shipped in 24
+     places across 7 screens. Braces, never quotes. */
+  const quoted = [];
+  for (const dir of ['src/views', 'src/components']) {
+    for (const f of fs.readdirSync(dir).filter(x => x.endsWith('.jsx'))) {
+      fs.readFileSync(path.join(dir, f), 'utf8').split('\n').forEach((line, i) => {
+        if (/=\s*"[^"]*\$\{[^"]*\}[^"]*"/.test(line)) quoted.push(`${f}:${i + 1}`);
+      });
+    }
+  }
+  t.ok(quoted.length === 0,
+    quoted.length ? `no JSX attribute puts \${...} inside quotes — found ${quoted.join(', ')}` : 'no JSX attribute puts ${...} inside quotes, so brand colours actually apply');
 }

@@ -266,13 +266,13 @@ function BrandCard({ ctx, open, onToggle }) {
         <Field label="Primary (cobalt)">
           <div style={{ display: 'flex', gap: 9, alignItems: 'center' }}>
             <Swatch value={d.cobalt || FALLBACK.brand.cobalt || BRAND.colors.cobalt} onChange={v => ctl.patch({ cobalt: v })} title="Primary" />
-            <Inp value={d.cobalt || ''} placeholder="${BRAND.colors.cobalt}" onChange={e => ctl.patch({ cobalt: e.target.value })} />
+            <Inp value={d.cobalt || ''} placeholder={BRAND.colors.cobalt} onChange={e => ctl.patch({ cobalt: e.target.value })} />
           </div>
         </Field>
         <Field label="Text (ink)">
           <div style={{ display: 'flex', gap: 9, alignItems: 'center' }}>
             <Swatch value={d.ink || BRAND.colors.ink} onChange={v => ctl.patch({ ink: v })} title="Ink" />
-            <Inp value={d.ink || ''} placeholder="${BRAND.colors.ink}" onChange={e => ctl.patch({ ink: e.target.value })} />
+            <Inp value={d.ink || ''} placeholder={BRAND.colors.ink} onChange={e => ctl.patch({ ink: e.target.value })} />
           </div>
         </Field>
       </div>

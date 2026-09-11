@@ -1243,57 +1243,95 @@ button,a,label,select,input,textarea,.kcard,.fu-card,.cli-card,.rt-person,.msec-
 .set-row .nav-mv button{border-color:#E1E2EC;background:#F1F2F8;color:#56527a}
 .set-row .nav-mv button:hover:not(:disabled){border-color:${COBALT};color:${COBALT}}
 
-/* ---------------------------------------------------------------- tasks --- */
-.tk-add{display:grid;grid-template-columns:1fr 170px auto;gap:9px;align-items:center}
-@media(max-width:640px){.tk-add{grid-template-columns:1fr}}
-.tk-grp{margin-top:14px}
-.tk-grp:first-child{margin-top:2px}
-.tk-grp-h{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;
-  letter-spacing:.06em;text-transform:uppercase;color:#8E89A8;margin-bottom:7px}
-.tk-grp-h.late{color:#B03030}
-.tk-grp-n{background:#EEF0F7;color:#56527a;border-radius:20px;padding:0 7px;font-size:11px}
-.tk-grp-h.late .tk-grp-n{background:#F7DED9;color:#8E2B22}
-.tk-row{display:flex;align-items:flex-start;gap:10px;padding:9px 10px;border-radius:10px;
-  border:1px solid #EEEFF6;background:#fff;margin-bottom:6px}
-.tk-row:hover{border-color:#D8D9E6}
-.tk-check{border:0;background:none;cursor:pointer;color:#C9C5D9;padding:0;margin-top:1px;flex:none}
-.tk-check:hover{color:${COBALT}}
-.tk-mid{flex:1;min-width:0}
-.tk-title{font-size:13.5px;font-weight:600;color:${INK};line-height:1.35}
-.tk-title.done{text-decoration:line-through;color:#9B98AD;font-weight:500}
-.tk-meta{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:4px;font-size:11.5px}
-.tk-due{font-weight:650;color:#6B6885}
-.tk-due.late{color:#B03030}
-.tk-due.none{color:#A6A2BC;font-style:italic}
-.tk-origin{display:inline-flex;align-items:center;gap:4px;border:1px solid #E4E5EF;background:#F7F8FC;
-  color:#56527a;border-radius:20px;padding:1px 8px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
-.tk-origin:hover{border-color:${COBALT};color:${COBALT}}
-.tk-note{color:#8E89A8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:340px}
-.tk-del{border:0;background:none;color:#C9C5D9;cursor:pointer;padding:2px;flex:none}
-.tk-del:hover{color:#B03030}
+/* ---------------------------------------------------------------- tasks ---
+   Ported from ProyTech's tasks screen. .task-due-chip, .task-daypick,
+   .day-chip, .day-date, .task-overdue and .task-hint already live above. */
+.task-addcard{padding:16px 18px;margin-bottom:16px}
+.task-add{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.task-input{flex:1 1 260px;min-width:0;padding:11px 13px;border:1px solid #E2E3EE;border-radius:11px;font-size:14px;font-family:'Inter';background:#fff;color:${INK}}
+.task-input::placeholder{color:#A6A2BC}
+.task-input:focus{outline:none;border-color:${COBALT};box-shadow:0 0 0 3px ${alpha(COBALT,.13)}}
+.task-owner{max-width:210px;padding:9px 11px;font-size:13px}
+.task-add-sub{font-size:12px;color:#A6A2BC;margin-top:10px}
+.task-filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.task-who{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.task-who .selctl{padding:7px 10px;font-size:12.5px}
+.task-sec{display:flex;align-items:center;gap:10px;margin:6px 0 12px;flex-wrap:wrap}
+.task-sec.free{margin-top:26px;padding-top:20px;border-top:1px solid #E8E9F2}
+.task-sec h3{display:flex;align-items:center;gap:7px;font-family:'Space Grotesk';font-size:15px;font-weight:600;color:${INK};margin:0}
+.task-sec h3 svg{color:${COBALT}}
+.task-cap{font-size:12px;font-weight:700;color:#6a6788;background:#F0F1F7;border-radius:20px;padding:3px 10px;font-variant-numeric:tabular-nums}
+.task-cap.over{background:${alpha(GOLD,.18)};color:#9A5B18}
+.task-cap.plain{color:#8b88a0;font-weight:600}
+.task-cap-note{font-size:12.5px;color:#9A5B18;font-weight:500}
+.task-sec-sub{margin-left:auto;font-size:11.5px;color:#a6a2bc}
+.task-list{display:flex;flex-direction:column;gap:10px}
+.card.task-empty{padding:4px 12px}
+.card.task-card{padding:13px 15px;display:flex;gap:12px;align-items:flex-start;border-radius:16px}
+.card.task-card:hover{border-color:#D8D9E6}
+.task-card.done{opacity:.6}
+.task-check{background:none;border:none;cursor:pointer;padding:0;margin-top:1px;color:#c3c2d4;flex:none}
+.task-check:hover{color:${COBALT}}
+.task-check.on{color:${GREEN}}
+.task-main{flex:1;min-width:0}
+.task-title{font-weight:600;color:${INK};font-size:15px;line-height:1.35;overflow-wrap:anywhere}
+.task-card.done .task-title{text-decoration:line-through}
+.task-notes{font-size:12.5px;color:#8E89A8;margin-top:3px;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.task-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.task-origin{display:inline-flex;align-items:center;gap:4px;border:1px solid #E4E5EF;background:#F7F8FC;color:#56527a;border-radius:20px;padding:3px 9px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
+.task-origin:hover{border-color:${COBALT};color:${COBALT}}
+.task-acts{display:flex;gap:4px;flex:none}
+.task-icon{width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border:none;background:#F0F1F7;border-radius:9px;color:#56527a;cursor:pointer;padding:0}
+.task-icon:hover{background:#E6E7F1;color:${INK}}
+.task-icon.del:hover{color:${RED}}
+.task-focus{width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #E2E3EE;background:#fff;border-radius:9px;color:#c3c2d4;cursor:pointer;padding:0;transition:.14s}
+.task-focus:hover{color:${COBALT};border-color:${COBALT}}
+.task-focus.on{background:${COBALT};border-color:${COBALT};color:#fff}
+.task-focus:focus-visible,.task-icon:focus-visible,.task-check:focus-visible{outline:2px solid ${COBALT};outline-offset:2px}
+.task-picked{font-size:11px;font-weight:600;color:#9A5B18;background:${alpha(GOLD,.16)};border-radius:20px;padding:2px 9px;cursor:help}
+@media(max-width:640px){
+  .task-add>.btn{flex:1 1 100%;justify-content:center}
+  .task-owner{max-width:none;flex:1 1 100%}
+  .task-daypick{flex-wrap:wrap}
+  .task-sec-sub{margin-left:0;width:100%}
+  .card.task-card{padding:12px;gap:10px}
+  .task-acts{flex-direction:column}
+}
 
-/* ------------------------------------------------------------- activity --- */
-.ac-range{font-size:11.5px;color:#8E89A8;margin-bottom:10px}
-.ac-day{margin-top:14px}
-.ac-day:first-of-type{margin-top:2px}
-.ac-day-h{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;
-  letter-spacing:.06em;text-transform:uppercase;color:#8E89A8;margin-bottom:7px}
-.ac-day-n{background:#EEF0F7;color:#56527a;border-radius:20px;padding:0 7px;font-size:11px}
-.ac-row{display:flex;gap:10px;padding:8px 10px;border-radius:10px;border:1px solid #EEEFF6;
-  background:#fff;margin-bottom:6px}
-.ac-row.machine{background:#FAFAFD;border-style:dashed}
-.ac-ic{flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:8px;
-  background:#F1F2F8;color:${COBALT}}
-.ac-row.machine .ac-ic{color:#A6A2BC}
-.ac-mid{flex:1;min-width:0}
-.ac-note{font-size:13.5px;color:${INK};line-height:1.4}
-.ac-row.machine .ac-note{color:#6B6885}
-.ac-meta{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:3px;font-size:11.5px}
-.ac-kind{font-weight:700;color:#8E89A8}
-.ac-link{border:0;background:none;padding:0;font:inherit;font-size:11.5px;font-weight:650;
-  color:${COBALT};cursor:pointer}
-.ac-link:hover{text-decoration:underline}
-.ac-by{color:#8E89A8}
+/* ------------------------------------------------------------- activity ---
+   Ported from ProyTech's Activity tab. .act-ctrl, .act-nav, .act-row and the
+   rest of the log already live above; these are the additions. */
+.act-card{margin-bottom:16px}
+.act-card .act-ctrl{margin-bottom:12px}
+.bk-filters.act-chips{margin:0}
+.act-divider{width:1px;height:22px;background:#E4E5EE;margin:0 4px}
+.act-date{padding:7px 10px;border:1px solid #E1E2EC;border-radius:9px;font-size:13px;font-family:'Inter';color:${INK};background:#fff}
+.act-date:focus{outline:none;border-color:${COBALT}}
+.kgrid.act-kpis{grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:10px;margin-bottom:16px}
+.act-kpis .kpi{padding:13px 13px;border-radius:16px;min-width:0}
+.act-kpis .kpi .kl{font-size:10.5px;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.act-kpis .kpi .kd{font-size:11.5px}
+.act-kpis .kpi .kv{font-size:22px}
+.act-chartcard,.act-tablecard{margin-bottom:16px}
+.card.act-tablecard{padding:0;overflow:hidden}
+.act-tablecard .tbl-wrap{border:none;box-shadow:none;border-radius:0}
+.act-tbl th.num,.act-tbl td.num{text-align:right}
+.act-tbl th{cursor:default}
+.act-total{font-weight:800;color:${INK}}
+.act-loghead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.act-loghead h3{display:flex;align-items:center;gap:8px}
+.act-loghead .ch-sub{margin-bottom:8px}
+.act-logn{font-family:'Inter';font-size:11px;font-weight:700;color:#8E89A8;background:#F0F1F7;border-radius:20px;padding:2px 9px}
+.act-kind{font-size:11px;font-weight:700;color:#8E89A8}
+.act-machine{font-size:10.5px;font-weight:700;color:#8E89A8;background:#F4F5FA;border:1px dashed #D9D8E6;border-radius:20px;padding:1px 8px}
+.act-row.machine .act-lead,.act-row.machine .act-txt{color:#8E89A8}
+.act-row.still{cursor:default}
+@media(max-width:640px){
+  .act-nav b{min-width:0;flex:1}
+  .act-nav{flex:1 1 100%;justify-content:space-between}
+  .act-loghead .seg{width:100%}
+  .act-loghead .seg .seg-b{flex:1}
+}
 
 .tbl.sc .sc-sub{font-size:10.5px;color:#9b98ad;margin-top:1px;font-weight:500}
 .tbl.sc .sc-none{color:#C9C5D9}

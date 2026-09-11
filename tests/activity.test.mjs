@@ -23,6 +23,7 @@ import path from 'node:path';
 import {
   isMachineEntry, isAccomplishment, buildStream, byDay,
   MACHINE_KINDS, MACHINE_NOTES, DOING_KINDS,
+  ACT_TYPES, rangeOf, shiftAnchor, dayIn, timeIn, tally,
 } from '../src/lib/activity.js';
 
 const read = p => fs.readFileSync(p, 'utf8');
@@ -46,6 +47,8 @@ function code(src) {
 }
 
 export default async function run(t) {
+  await runScreen(t);
+
   /* ---------------- the classifier ---------------- */
   t.ok(isMachineEntry({ kind: 'import', note: 'Imported from leads.csv on 2026-08-01.' }),
     'an import entry is a machine entry — the kind says so');
@@ -158,4 +161,50 @@ export default async function run(t) {
   t.ok(!!contractNote, 'Contracts.jsx still writes an activity entry with kind note');
   t.ok(MACHINE_NOTES.some(p => /Created from a contract upload/.test(p)),
     'and its text is on the machine-note list');
+}
+
+/* ---------------- the screen: ported from ProyTech's Activity tab ---------------- */
+async function runScreen(t) {
+  const w = rangeOf('week', '2026-09-11');
+  t.eq(`${w.from}..${w.to}`, '2026-09-06..2026-09-12', 'a week runs Sunday to Saturday around the anchor');
+  const m = rangeOf('month', '2024-02-10');
+  t.eq(`${m.from}..${m.to}`, '2024-02-01..2024-02-29', 'a month covers the whole month, leap day included');
+  t.eq(m.label, 'February 2024', 'and is labelled by name');
+  t.eq(rangeOf('day', '2026-09-11').from, '2026-09-11', 'a day is just that day');
+
+  t.eq(shiftAnchor('month', '2026-01-31', 1), '2026-02-01', 'a month step from Jan 31 lands on Feb 1, never March');
+  t.eq(shiftAnchor('month', '2026-01-15', -1), '2025-12-01', 'and steps back across a year');
+  t.eq(shiftAnchor('week', '2026-09-11', -1), '2026-09-04', 'a week step is seven days');
+
+  t.eq(dayIn('2026-09-12T03:00:00Z', 'America/Chicago'), '2026-09-11',
+    'a 10pm call in Chicago counts on that evening, not on the UTC date');
+  t.eq(dayIn('2026-09-11', 'America/Chicago'), '2026-09-11', 'a bare date is already a day');
+  t.eq(timeIn('2026-09-11', 'America/Chicago'), '', 'and has no time to show');
+  t.ok(/10:00/.test(timeIn('2026-09-12T03:00:00Z', 'America/Chicago')), 'a timestamp shows its local time');
+
+  const late = buildStream({
+    contacts: [{ id: 'c', name: 'Pat', activity: [{ id: 'z', at: '2026-09-12T03:00:00Z', kind: 'call', note: 'x', by: 'u1' }] }],
+    from: '2026-09-11', to: '2026-09-11', tz: 'America/Chicago',
+  });
+  t.eq(late.length, 1, 'the stream windows by the install timezone when it is given one');
+
+  const s = [
+    { kind: 'call', by: 'u1' }, { kind: 'call', by: 'u2' }, { kind: 'text', by: 'u1' },
+    { kind: 'task', by: 'u1' }, { kind: 'import', by: 'u1', machine: true },
+    { kind: 'note', by: 'u2', machine: true },
+  ];
+  const { byType, byPerson } = tally(s);
+  t.eq(byType.total, 4, 'the totals never count a machine entry');
+  t.eq(byType.call, 2, 'calls are counted per kind');
+  t.eq(byPerson.u1.total, 3, 'and per person');
+  t.eq(byPerson.u2.note, 0, 'a machine note wearing a human kind is not somebody\'s note');
+
+  /* A kind a person can do that the screen does not list would be counted
+     nowhere: gone from the KPIs, the chart and the table without an error. */
+  const keys = ACT_TYPES.map(x => x.key);
+  const missing = DOING_KINDS.filter(k => !keys.includes(k));
+  t.ok(missing.length === 0, missing.length
+    ? `every accomplishment kind has a place on the Activity screen — missing: ${missing.join(', ')}`
+    : 'every accomplishment kind has a place on the Activity screen');
+  t.ok(keys.includes('task'), 'and finished tasks do too');
 }
